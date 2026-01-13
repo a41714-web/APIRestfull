@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/turmas")
+@RequestMapping("/api/turmas")
 @Tag(name = "Turmas", description = "API para gerenciamento de turmas")
 public class TurmaController {
 

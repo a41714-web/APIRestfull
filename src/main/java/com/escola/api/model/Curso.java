@@ -3,18 +3,12 @@ package com.escola.api.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "cursos")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Curso {
 
     @Id
@@ -31,4 +25,46 @@ public class Curso {
 
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL)
     private List<Turma> turmas = new ArrayList<>();
+
+    public Curso() {
+    }
+
+    public Curso(Long id, String nome, Integer duracao, List<Turma> turmas) {
+        this.id = id;
+        this.nome = nome;
+        this.duracao = duracao;
+        this.turmas = turmas;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Integer getDuracao() {
+        return duracao;
+    }
+
+    public void setDuracao(Integer duracao) {
+        this.duracao = duracao;
+    }
+
+    public List<Turma> getTurmas() {
+        return turmas;
+    }
+
+    public void setTurmas(List<Turma> turmas) {
+        this.turmas = turmas;
+    }
 }
