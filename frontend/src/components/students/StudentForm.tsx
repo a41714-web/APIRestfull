@@ -2,31 +2,32 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Item } from '@/types/item';
+import { Student } from '@/types/student';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Alert } from '@/components/ui/Alert';
-import { createItem, updateItem } from '@/services/api';
+import { createStudent, updateStudent } from '@/services/api';
 
-interface ItemFormProps {
-    initialData?: Item;
+interface StudentFormProps {
+    initialData?: Student;
 }
 
-export default function ItemForm({ initialData }: ItemFormProps) {
+export default function StudentForm({ initialData }: StudentFormProps) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [formData, setFormData] = useState<Omit<Item, 'id'>>({
-        name: initialData?.name || '',
-        description: initialData?.description || '',
-        price: initialData?.price || 0,
+    const [formData, setFormData] = useState<Student>({
+        nome: initialData?.nome || '',
+        idade: initialData?.idade || 0,
+        email: initialData?.email || '',
+        turmaId: initialData?.turmaId,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
-            [name]: name === 'price' ? parseFloat(value) || 0 : value,
+            [name]: name === 'idade' || name === 'turmaId' ? (value ? parseInt(value) : 0) : value,
         }));
     };
 
@@ -37,14 +38,14 @@ export default function ItemForm({ initialData }: ItemFormProps) {
 
         try {
             if (initialData?.id) {
-                await updateItem(initialData.id, formData);
+                await updateStudent(initialData.id, formData);
             } else {
-                await createItem(formData);
+                await createStudent(formData);
             }
-            router.push('/items');
+            router.push('/students');
             router.refresh();
         } catch (err) {
-            setError('Failed to save item. Please try again.');
+            setError('Failed to save student. Please try again.');
             console.error(err);
         } finally {
             setLoading(false);
@@ -54,7 +55,7 @@ export default function ItemForm({ initialData }: ItemFormProps) {
     return (
         <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-lg border border-gray-100">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">
-                {initialData ? 'Edit Item' : 'Create New Item'}
+                {initialData ? 'Edit Student' : 'Register New Student'}
             </h2>
 
             {error && <Alert type="error" message={error} />}
@@ -62,32 +63,42 @@ export default function ItemForm({ initialData }: ItemFormProps) {
             <form onSubmit={handleSubmit} className="space-y-6">
                 <Input
                     label="Name"
-                    name="name"
-                    value={formData.name}
+                    name="nome"
+                    value={formData.nome}
                     onChange={handleChange}
                     required
-                    placeholder="Enter item name"
+                    placeholder="Enter student name"
                 />
 
                 <Input
-                    label="Description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    required
-                    placeholder="Enter item description"
-                />
-
-                <Input
-                    label="Price"
-                    name="price"
+                    label="Age"
+                    name="idade"
                     type="number"
-                    step="0.01"
                     min="0"
-                    value={formData.price}
+                    value={formData.idade}
                     onChange={handleChange}
                     required
-                    placeholder="0.00"
+                    placeholder="Enter student age"
+                />
+
+                <Input
+                    label="Email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    placeholder="Enter student email"
+                />
+
+                <Input
+                    label="Class ID (Optional)"
+                    name="turmaId"
+                    type="number"
+                    min="0"
+                    value={formData.turmaId || ''}
+                    onChange={handleChange}
+                    placeholder="Enter class ID"
                 />
 
                 <div className="flex justify-end gap-3 pt-4">
@@ -102,7 +113,7 @@ export default function ItemForm({ initialData }: ItemFormProps) {
                         type="submit"
                         isLoading={loading}
                     >
-                        {initialData ? 'Update Item' : 'Create Item'}
+                        {initialData ? 'Update Student' : 'Register Student'}
                     </Button>
                 </div>
             </form>

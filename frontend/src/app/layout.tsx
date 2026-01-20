@@ -4,8 +4,8 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Item Manager',
-  description: 'Manage your items efficiently',
+  title: 'School Manager',
+  description: 'Manage your students efficiently',
 };
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
           <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
               <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                Item Manager
+                School Manager
               </h1>
             </div>
           </header>
@@ -28,7 +28,7 @@ export default function RootLayout({
             {children}
           </main>
           <footer className="bg-white border-t border-gray-200 py-6 text-center text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} Item Manager. All rights reserved.
+            &copy; {new Date().getFullYear()} School Manager. All rights reserved.
           </footer>
         </div>
       </body>

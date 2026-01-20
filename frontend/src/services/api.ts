@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { Item } from '@/types/item';
+import { Student } from '@/types/student';
 
-const API_URL = 'http://localhost:8080/items';
+const API_URL = 'http://localhost:8080/alunos';
 
 const api = axios.create({
     baseURL: API_URL,
@@ -10,27 +10,27 @@ const api = axios.create({
     },
 });
 
-export const getItems = async (): Promise<Item[]> => {
+export const getStudents = async (): Promise<Student[]> => {
     const response = await api.get('/');
     return response.data;
 };
 
-export const getItem = async (id: number): Promise<Item> => {
+export const getStudent = async (id: number): Promise<Student> => {
     const response = await api.get(`/${id}`);
     return response.data;
 };
 
-export const createItem = async (item: Omit<Item, 'id'>): Promise<Item> => {
-    const response = await api.post('/', item);
+export const createStudent = async (student: Student): Promise<Student> => {
+    const response = await api.post('/', student);
     return response.data;
 };
 
-export const updateItem = async (id: number, item: Omit<Item, 'id'>): Promise<Item> => {
-    const response = await api.put(`/${id}`, item);
+export const updateStudent = async (id: number, student: Student): Promise<Student> => {
+    const response = await api.put(`/${id}`, student);
     return response.data;
 };
 
-export const deleteItem = async (id: number): Promise<void> => {
+export const deleteStudent = async (id: number): Promise<void> => {
     await api.delete(`/${id}`);
 };
 

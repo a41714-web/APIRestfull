@@ -3,24 +3,24 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
-import { Item } from '@/types/item';
-import { getItems, deleteItem } from '@/services/api';
+import { Student } from '@/types/student';
+import { getStudents, deleteStudent } from '@/services/api';
 import { Button } from '@/components/ui/Button';
 import { Table } from '@/components/ui/Table';
 import { Alert } from '@/components/ui/Alert';
 
-export default function ItemsPage() {
-    const [items, setItems] = useState<Item[]>([]);
+export default function StudentsPage() {
+    const [students, setStudents] = useState<Student[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    const fetchItems = async () => {
+    const fetchStudents = async () => {
         try {
-            const data = await getItems();
-            setItems(data);
+            const data = await getStudents();
+            setStudents(data);
             setError('');
         } catch (err) {
-            setError('Failed to fetch items. Please ensure the API is running.');
+            setError('Failed to fetch students. Please ensure the API is running.');
             console.error(err);
         } finally {
             setLoading(false);
@@ -28,17 +28,17 @@ export default function ItemsPage() {
     };
 
     useEffect(() => {
-        fetchItems();
+        fetchStudents();
     }, []);
 
     const handleDelete = async (id: number) => {
-        if (!confirm('Are you sure you want to delete this item?')) return;
+        if (!confirm('Are you sure you want to delete this student?')) return;
 
         try {
-            await deleteItem(id);
-            setItems(items.filter((item) => item.id !== id));
+            await deleteStudent(id);
+            setStudents(students.filter((student) => student.id !== id));
         } catch {
-            alert('Failed to delete item.');
+            alert('Failed to delete student.');
         }
     };
 
@@ -54,13 +54,13 @@ export default function ItemsPage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Items</h2>
-                    <p className="text-gray-500 mt-1">Manage your items inventory</p>
+                    <h2 className="text-2xl font-bold text-gray-900">Students</h2>
+                    <p className="text-gray-500 mt-1">Manage your students</p>
                 </div>
-                <Link href="/items/create">
+                <Link href="/students/create">
                     <Button>
                         <Plus className="w-4 h-4 mr-2" />
-                        Add New Item
+                        New Student
                     </Button>
                 </Link>
             </div>
@@ -69,31 +69,31 @@ export default function ItemsPage() {
                 <Alert type="error" message={error} />
             ) : (
                 <Table
-                    data={items}
-                    keyExtractor={(item) => (item.id !== undefined ? item.id : Math.random())}
+                    data={students}
+                    keyExtractor={(student) => (student.id !== undefined ? student.id : Math.random())}
                     columns={[
                         {
                             header: 'Name',
-                            accessor: 'name',
+                            accessor: 'nome',
                             className: 'font-medium',
                         },
                         {
-                            header: 'Description',
-                            accessor: 'description',
+                            header: 'Age',
+                            accessor: 'idade',
                         },
                         {
-                            header: 'Price',
-                            accessor: (item) => (
-                                <span className="font-mono text-gray-700">
-                                    ${item.price.toFixed(2)}
-                                </span>
-                            ),
+                            header: 'Email',
+                            accessor: 'email',
+                        },
+                        {
+                            header: 'Class',
+                            accessor: (student) => student.turmaNome || 'N/A',
                         },
                         {
                             header: 'Actions',
-                            accessor: (item) => (
+                            accessor: (student) => (
                                 <div className="flex gap-2">
-                                    <Link href={`/items/${item.id}/edit`}>
+                                    <Link href={`/students/${student.id}/edit`}>
                                         <Button variant="secondary" size="sm">
                                             <Edit2 className="w-4 h-4" />
                                         </Button>
@@ -101,7 +101,7 @@ export default function ItemsPage() {
                                     <Button
                                         variant="danger"
                                         size="sm"
-                                        onClick={() => item.id !== undefined && handleDelete(item.id)}
+                                        onClick={() => student.id !== undefined && handleDelete(student.id)}
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </Button>
