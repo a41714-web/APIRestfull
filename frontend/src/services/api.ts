@@ -11,7 +11,7 @@ const api = axios.create({
 });
 
 export const getStudents = async (): Promise<Student[]> => {
-    const response = await api.get('/');
+    const response = await api.get('');
     return response.data;
 };
 
@@ -21,7 +21,7 @@ export const getStudent = async (id: number): Promise<Student> => {
 };
 
 export const createStudent = async (student: Student): Promise<Student> => {
-    const response = await api.post('/', student);
+    const response = await api.post('', student);
     return response.data;
 };
 
