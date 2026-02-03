@@ -3,24 +3,24 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
-import { Student } from '@/types/student';
-import { getStudents, deleteStudent } from '@/services/api';
+import { Course } from '@/types/course';
+import { getCourses, deleteCourse } from '@/services/courseService';
 import { Button } from '@/components/ui/Button';
 import { Table } from '@/components/ui/Table';
 import { Alert } from '@/components/ui/Alert';
 
-export default function StudentsPage() {
-    const [students, setStudents] = useState<Student[]>([]);
+export default function CoursesPage() {
+    const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    const fetchStudents = async () => {
+    const fetchCourses = async () => {
         try {
-            const data = await getStudents();
-            setStudents(data);
+            const data = await getCourses();
+            setCourses(data);
             setError('');
         } catch (err) {
-            setError('Failed to fetch students. Please ensure the API is running.');
+            setError('Failed to fetch courses. Please ensure the API is running.');
             console.error(err);
         } finally {
             setLoading(false);
@@ -28,17 +28,17 @@ export default function StudentsPage() {
     };
 
     useEffect(() => {
-        fetchStudents();
+        fetchCourses();
     }, []);
 
     const handleDelete = async (id: number) => {
-        if (!confirm('Are you sure you want to delete this student?')) return;
+        if (!confirm('Are you sure you want to delete this course?')) return;
 
         try {
-            await deleteStudent(id);
-            setStudents(students.filter((student) => student.id !== id));
+            await deleteCourse(id);
+            setCourses(courses.filter((course) => course.id !== id));
         } catch {
-            alert('Failed to delete student.');
+            alert('Failed to delete course.');
         }
     };
 
@@ -54,13 +54,13 @@ export default function StudentsPage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Students</h2>
-                    <p className="text-gray-600 mt-1">Manage your students</p>
+                    <h2 className="text-2xl font-bold text-gray-900">Courses</h2>
+                    <p className="text-gray-500 mt-1">Manage your courses</p>
                 </div>
-                <Link href="/students/create">
+                <Link href="/courses/create">
                     <Button>
                         <Plus className="w-4 h-4 mr-2" />
-                        New Student
+                        New Course
                     </Button>
                 </Link>
             </div>
@@ -69,31 +69,24 @@ export default function StudentsPage() {
                 <Alert type="error" message={error} />
             ) : (
                 <Table
-                    data={students}
-                    keyExtractor={(student) => (student.id !== undefined ? student.id : Math.random())}
+                    data={courses}
+                    keyExtractor={(course) => (course.id !== undefined ? course.id : Math.random())}
                     columns={[
+                        {
+                            header: 'ID',
+                            accessor: 'id',
+                            className: 'w-24',
+                        },
                         {
                             header: 'Name',
                             accessor: 'nome',
                             className: 'font-medium',
                         },
                         {
-                            header: 'Age',
-                            accessor: 'idade',
-                        },
-                        {
-                            header: 'Email',
-                            accessor: 'email',
-                        },
-                        {
-                            header: 'Class',
-                            accessor: (student) => student.turmaNome || 'N/A',
-                        },
-                        {
                             header: 'Actions',
-                            accessor: (student) => (
+                            accessor: (course) => (
                                 <div className="flex gap-2">
-                                    <Link href={`/students/${student.id}/edit`}>
+                                    <Link href={`/courses/${course.id}/edit`}>
                                         <Button variant="secondary" size="sm">
                                             <Edit2 className="w-4 h-4" />
                                         </Button>
@@ -101,7 +94,7 @@ export default function StudentsPage() {
                                     <Button
                                         variant="danger"
                                         size="sm"
-                                        onClick={() => student.id !== undefined && handleDelete(student.id)}
+                                        onClick={() => course.id !== undefined && handleDelete(course.id)}
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </Button>

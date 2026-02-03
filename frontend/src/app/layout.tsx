@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gray-50 min-h-screen text-gray-900`}>
+      <body className={`${inter.className} min-h-screen`} style={{ backgroundColor: '#f9fafb', color: '#111827' }}>
         <div className="min-h-screen flex flex-col">
           <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">

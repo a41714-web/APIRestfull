@@ -3,24 +3,24 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
-import { Student } from '@/types/student';
-import { getStudents, deleteStudent } from '@/services/api';
+import { Class } from '@/types/class';
+import { getClasses, deleteClass } from '@/services/classService';
 import { Button } from '@/components/ui/Button';
 import { Table } from '@/components/ui/Table';
 import { Alert } from '@/components/ui/Alert';
 
-export default function StudentsPage() {
-    const [students, setStudents] = useState<Student[]>([]);
+export default function ClassesPage() {
+    const [classes, setClasses] = useState<Class[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    const fetchStudents = async () => {
+    const fetchClasses = async () => {
         try {
-            const data = await getStudents();
-            setStudents(data);
+            const data = await getClasses();
+            setClasses(data);
             setError('');
         } catch (err) {
-            setError('Failed to fetch students. Please ensure the API is running.');
+            setError('Failed to fetch classes. Please ensure the API is running.');
             console.error(err);
         } finally {
             setLoading(false);
@@ -28,17 +28,17 @@ export default function StudentsPage() {
     };
 
     useEffect(() => {
-        fetchStudents();
+        fetchClasses();
     }, []);
 
     const handleDelete = async (id: number) => {
-        if (!confirm('Are you sure you want to delete this student?')) return;
+        if (!confirm('Are you sure you want to delete this class?')) return;
 
         try {
-            await deleteStudent(id);
-            setStudents(students.filter((student) => student.id !== id));
+            await deleteClass(id);
+            setClasses(classes.filter((c) => c.id !== id));
         } catch {
-            alert('Failed to delete student.');
+            alert('Failed to delete class.');
         }
     };
 
@@ -54,13 +54,13 @@ export default function StudentsPage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Students</h2>
-                    <p className="text-gray-600 mt-1">Manage your students</p>
+                    <h2 className="text-2xl font-bold text-gray-900">Classes</h2>
+                    <p className="text-gray-500 mt-1">Manage your classes (Turmas)</p>
                 </div>
-                <Link href="/students/create">
+                <Link href="/classes/create">
                     <Button>
                         <Plus className="w-4 h-4 mr-2" />
-                        New Student
+                        New Class
                     </Button>
                 </Link>
             </div>
@@ -69,31 +69,28 @@ export default function StudentsPage() {
                 <Alert type="error" message={error} />
             ) : (
                 <Table
-                    data={students}
-                    keyExtractor={(student) => (student.id !== undefined ? student.id : Math.random())}
+                    data={classes}
+                    keyExtractor={(c) => (c.id !== undefined ? c.id : Math.random())}
                     columns={[
+                        {
+                            header: 'ID',
+                            accessor: 'id',
+                            className: 'w-24',
+                        },
                         {
                             header: 'Name',
                             accessor: 'nome',
                             className: 'font-medium',
                         },
                         {
-                            header: 'Age',
-                            accessor: 'idade',
-                        },
-                        {
-                            header: 'Email',
-                            accessor: 'email',
-                        },
-                        {
-                            header: 'Class',
-                            accessor: (student) => student.turmaNome || 'N/A',
+                            header: 'Year',
+                            accessor: 'ano',
                         },
                         {
                             header: 'Actions',
-                            accessor: (student) => (
+                            accessor: (c) => (
                                 <div className="flex gap-2">
-                                    <Link href={`/students/${student.id}/edit`}>
+                                    <Link href={`/classes/${c.id}/edit`}>
                                         <Button variant="secondary" size="sm">
                                             <Edit2 className="w-4 h-4" />
                                         </Button>
@@ -101,7 +98,7 @@ export default function StudentsPage() {
                                     <Button
                                         variant="danger"
                                         size="sm"
-                                        onClick={() => student.id !== undefined && handleDelete(student.id)}
+                                        onClick={() => c.id !== undefined && handleDelete(c.id)}
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </Button>
